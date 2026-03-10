@@ -21,7 +21,7 @@ message AuditLog {
     int64 actor_id = 3;
     string role = 4;
     string description = 5;
-    string occurred_at = 6;    // ISO 8601 string, actual time the event occurred
+    string occurred_at = 6;   // ISO 8601 string, actual time the event occurred
     string created_at = 7;    // ISO 8601 string
     string previous_hash = 8;
     string current_hash = 9;
@@ -43,7 +43,6 @@ message QueryAuditLogsResponse {
 }
 
 message VerifyAuditLogChainRequest {
-    // Leave empty to verify all logs. Can be extended with a time range filter in the future.
     optional string start_time = 1; // ISO 8601 string
     optional string end_time = 2;   // ISO 8601 string
 }
