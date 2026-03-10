@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package ceramicraft.log;
+
+enum Role {
+    ROLE_UNSPECIFIED = 0;
+    MERCHANT = 1;
+    CUSTOMER = 2;
+    SYSTEM = 3;
+}
+
+message RecordAuditLogRequest {
+    int64 actor_id = 1;       // 操作人（商家或顾客的ID）
+    Role role = 2;            // 操作人角色
+    string description = 3;   // 操作描述（包含原动作、资源对象、额外信息等）
+}
+
+message RecordAuditLogResponse {
+    bool success = 1;
+    string event_id = 2;      // 返回生成的日志记录ID
+}
+
+service AuditLogService {
+    rpc RecordAuditLog (RecordAuditLogRequest) returns (RecordAuditLogResponse);
+}

@@ -12,7 +12,7 @@ dependencies = [
     "dttb>=0.3.2",
     "grpcio>=1.78.0",
     "grpcio-tools>=1.78.0",
-    "psycopg>=3.3.3",
+    "psycopg[binary]>=3.3.3",
     "python-dotenv>=1.2.2",
     "sqlalchemy>=2.0.48",
 ]
