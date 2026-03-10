@@ -13,7 +13,7 @@ _env_host = os.getenv("GRPC_HOST", "localhost")
 GRPC_HOST = "localhost" if _env_host == "[::]" else _env_host
 
 
-def run():
+def main() -> None:
     grpc_target = f"{GRPC_HOST}:{GRPC_PORT}"
     print(f"Connecting to {grpc_target}...")
     with grpc.insecure_channel(grpc_target) as channel:
@@ -81,4 +81,4 @@ def run():
 
 
 if __name__ == "__main__":
-    run()
+    main()
