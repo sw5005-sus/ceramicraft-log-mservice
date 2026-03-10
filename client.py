@@ -16,12 +16,14 @@ GRPC_HOST = "localhost" if _env_host == "[::]" else _env_host
 def main() -> None:
     grpc_target = f"{GRPC_HOST}:{GRPC_PORT}"
     print(f"Connecting to {grpc_target}...")
+
     with grpc.insecure_channel(grpc_target) as channel:
         stub = audit_log_pb2_grpc.AuditLogServiceStub(channel)
 
         # Test record 1
         response = stub.RecordAuditLog(
             audit_log_pb2.RecordAuditLogRequest(
+                service="product-service",
                 actor_id=101,
                 role="MERCHANT",
                 description="Merchant 101 updated product stock",
@@ -33,6 +35,7 @@ def main() -> None:
         # Test record 2
         response2 = stub.RecordAuditLog(
             audit_log_pb2.RecordAuditLogRequest(
+                service="order-service",
                 actor_id=202,
                 role="CUSTOMER",
                 description="Customer 202 completed payment",
@@ -50,7 +53,7 @@ def main() -> None:
         print(f"Total count: {query_response.total_count}")
         for log in query_response.logs:
             print(
-                f"[{log.occurred_at}](rcv {log.created_at}) ID: {log.id}, Actor: {log.actor_id}, Role: {log.role}, Desc: {log.description}"
+                f"[{log.occurred_at}](rcv {log.created_at}) ID: {log.id}, Service: {log.service}, Actor: {log.actor_id}, Role: {log.role}, Desc: {log.description}"
             )
             print(
                 f"    PrevHash: {log.previous_hash[:16]}... CurrHash: {log.current_hash[:16]}..."
@@ -65,7 +68,19 @@ def main() -> None:
         print(f"Total count for actor 101: {query_response_actor.total_count}")
         for log in query_response_actor.logs:
             print(
-                f"[{log.occurred_at}](rcv {log.created_at}) ID: {log.id}, Actor: {log.actor_id}, Desc: {log.description}"
+                f"[{log.occurred_at}](rcv {log.created_at}) ID: {log.id}, Service: {log.service}, Actor: {log.actor_id}, Desc: {log.description}"
+            )
+
+        # Test query by service
+        print("-" * 40)
+        print("Testing QueryAuditLogs with service=order-service:")
+        query_response_service = stub.QueryAuditLogs(
+            audit_log_pb2.QueryAuditLogsRequest(service="order-service", limit=10)
+        )
+        print(f"Total count for order-service: {query_response_service.total_count}")
+        for log in query_response_service.logs:
+            print(
+                f"[{log.occurred_at}](rcv {log.created_at}) ID: {log.id}, Service: {log.service}, Actor: {log.actor_id}, Desc: {log.description}"
             )
 
         # Test validation

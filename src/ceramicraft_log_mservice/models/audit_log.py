@@ -12,10 +12,9 @@ class AuditLogEntry(Base):
     __tablename__ = "audit_logs"
 
     id = Column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    service = Column(String(100), nullable=False, index=True)
     actor_id = Column(BigInteger, nullable=False, index=True)
-    role = Column(
-        String(20), nullable=False
-    )  # Enum or string, string is safer for cross-service
+    role = Column(String(20), nullable=False)
     description = Column(String(500), nullable=False)
     occurred_at = Column(DateTime(timezone=True), nullable=False, index=True)
     created_at = Column(
@@ -26,9 +25,8 @@ class AuditLogEntry(Base):
     )
 
     # Hash Chain for tamper evidence (Strict Single Chain)
-    previous_hash = Column(
-        String(64), nullable=False
-    )  # SHA-256 hash is 64 hex characters
+    # SHA-256 hash is 64 hex characters
+    previous_hash = Column(String(64), nullable=False)
     current_hash = Column(String(64), nullable=False, unique=True, index=True)
 
     def calculate_hash(
@@ -40,7 +38,7 @@ class AuditLogEntry(Base):
         """
         # Ensure consistent ordering for hashing
         content = (
-            f"{self.actor_id}|{self.role}|{self.description}|"
+            f"{self.service}|{self.actor_id}|{self.role}|{self.description}|"
             f"{self.occurred_at.isoformat()}|"
             f"{self.created_at.isoformat()}|"
             f"{self.previous_hash}"

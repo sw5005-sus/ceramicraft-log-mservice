@@ -7,16 +7,18 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 DESCRIPTOR: _descriptor.FileDescriptor
 
 class RecordAuditLogRequest(_message.Message):
-    __slots__ = ("actor_id", "role", "description", "occurred_at")
+    __slots__ = ("service", "actor_id", "role", "description", "occurred_at")
+    SERVICE_FIELD_NUMBER: _ClassVar[int]
     ACTOR_ID_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
     OCCURRED_AT_FIELD_NUMBER: _ClassVar[int]
+    service: str
     actor_id: int
     role: str
     description: str
     occurred_at: str
-    def __init__(self, actor_id: _Optional[int] = ..., role: _Optional[str] = ..., description: _Optional[str] = ..., occurred_at: _Optional[str] = ...) -> None: ...
+    def __init__(self, service: _Optional[str] = ..., actor_id: _Optional[int] = ..., role: _Optional[str] = ..., description: _Optional[str] = ..., occurred_at: _Optional[str] = ...) -> None: ...
 
 class RecordAuditLogResponse(_message.Message):
     __slots__ = ("success", "event_id")
@@ -27,8 +29,9 @@ class RecordAuditLogResponse(_message.Message):
     def __init__(self, success: bool = ..., event_id: _Optional[str] = ...) -> None: ...
 
 class AuditLog(_message.Message):
-    __slots__ = ("id", "actor_id", "role", "description", "occurred_at", "created_at", "previous_hash", "current_hash")
+    __slots__ = ("id", "service", "actor_id", "role", "description", "occurred_at", "created_at", "previous_hash", "current_hash")
     ID_FIELD_NUMBER: _ClassVar[int]
+    SERVICE_FIELD_NUMBER: _ClassVar[int]
     ACTOR_ID_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
@@ -37,6 +40,7 @@ class AuditLog(_message.Message):
     PREVIOUS_HASH_FIELD_NUMBER: _ClassVar[int]
     CURRENT_HASH_FIELD_NUMBER: _ClassVar[int]
     id: str
+    service: str
     actor_id: int
     role: str
     description: str
@@ -44,23 +48,25 @@ class AuditLog(_message.Message):
     created_at: str
     previous_hash: str
     current_hash: str
-    def __init__(self, id: _Optional[str] = ..., actor_id: _Optional[int] = ..., role: _Optional[str] = ..., description: _Optional[str] = ..., occurred_at: _Optional[str] = ..., created_at: _Optional[str] = ..., previous_hash: _Optional[str] = ..., current_hash: _Optional[str] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., service: _Optional[str] = ..., actor_id: _Optional[int] = ..., role: _Optional[str] = ..., description: _Optional[str] = ..., occurred_at: _Optional[str] = ..., created_at: _Optional[str] = ..., previous_hash: _Optional[str] = ..., current_hash: _Optional[str] = ...) -> None: ...
 
 class QueryAuditLogsRequest(_message.Message):
-    __slots__ = ("actor_id", "role", "start_time", "end_time", "limit", "offset")
+    __slots__ = ("actor_id", "service", "role", "start_time", "end_time", "limit", "offset")
     ACTOR_ID_FIELD_NUMBER: _ClassVar[int]
+    SERVICE_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
     START_TIME_FIELD_NUMBER: _ClassVar[int]
     END_TIME_FIELD_NUMBER: _ClassVar[int]
     LIMIT_FIELD_NUMBER: _ClassVar[int]
     OFFSET_FIELD_NUMBER: _ClassVar[int]
     actor_id: int
+    service: str
     role: str
     start_time: str
     end_time: str
     limit: int
     offset: int
-    def __init__(self, actor_id: _Optional[int] = ..., role: _Optional[str] = ..., start_time: _Optional[str] = ..., end_time: _Optional[str] = ..., limit: _Optional[int] = ..., offset: _Optional[int] = ...) -> None: ...
+    def __init__(self, actor_id: _Optional[int] = ..., service: _Optional[str] = ..., role: _Optional[str] = ..., start_time: _Optional[str] = ..., end_time: _Optional[str] = ..., limit: _Optional[int] = ..., offset: _Optional[int] = ...) -> None: ...
 
 class QueryAuditLogsResponse(_message.Message):
     __slots__ = ("logs", "total_count")

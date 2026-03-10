@@ -36,6 +36,7 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
 
             new_entry = AuditLogEntry(
                 id=str(uuid.uuid4()),
+                service=request.service,
                 actor_id=request.actor_id,
                 role=request.role,
                 description=request.description,
@@ -75,6 +76,8 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
 
             if request.HasField("actor_id"):
                 query = query.filter(AuditLogEntry.actor_id == request.actor_id)
+            if request.HasField("service") and request.service:
+                query = query.filter(AuditLogEntry.service == request.service)
             if request.HasField("role") and request.role:
                 query = query.filter(AuditLogEntry.role == request.role)
             if request.HasField("start_time"):
@@ -114,6 +117,7 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
                 pb_logs.append(
                     audit_log_pb2.AuditLog(
                         id=str(entry.id),
+                        service=entry.service,
                         actor_id=entry.actor_id,
                         role=entry.role,
                         description=entry.description,

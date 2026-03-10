@@ -3,10 +3,11 @@ syntax = "proto3";
 package ceramicraft.log;
 
 message RecordAuditLogRequest {
-    int64 actor_id = 1;       // 操作人（商家或顾客的ID）
-    string role = 2;          // 操作人角色（如 "MERCHANT", "CUSTOMER", "SYSTEM"）
-    string description = 3;   // 操作描述（包含原动作、资源对象、额外信息等）
-    string occurred_at = 4;   // 事件实际发生时间 ISO 8601 string
+    string service = 1;       // 调用方业务/服务名称（如 "order-service", "product-service"）
+    int64 actor_id = 2;       // 操作人（商家或顾客的ID）
+    string role = 3;          // 操作人角色（如 "MERCHANT", "CUSTOMER", "SYSTEM"）
+    string description = 4;   // 操作描述（包含原动作、资源对象、额外信息等）
+    string occurred_at = 5;   // 事件实际发生时间 ISO 8601 string
 }
 
 message RecordAuditLogResponse {
@@ -16,22 +17,24 @@ message RecordAuditLogResponse {
 
 message AuditLog {
     string id = 1;
-    int64 actor_id = 2;
-    string role = 3;
-    string description = 4;
-    string occurred_at = 5;    // ISO 8601 string, 事件实际发生时间
-    string created_at = 6;    // ISO 8601 string
-    string previous_hash = 7;
-    string current_hash = 8;
+    string service = 2;       // 调用方业务/服务名称
+    int64 actor_id = 3;
+    string role = 4;
+    string description = 5;
+    string occurred_at = 6;    // ISO 8601 string, 事件实际发生时间
+    string created_at = 7;    // ISO 8601 string
+    string previous_hash = 8;
+    string current_hash = 9;
 }
 
 message QueryAuditLogsRequest {
     optional int64 actor_id = 1;
-    optional string role = 2;
-    optional string start_time = 3; // ISO 8601 string
-    optional string end_time = 4;   // ISO 8601 string
-    int32 limit = 5;                // 分页大小
-    int32 offset = 6;               // 偏移量
+    optional string service = 2;    // 按调用方业务/服务筛选
+    optional string role = 3;
+    optional string start_time = 4; // ISO 8601 string
+    optional string end_time = 5;   // ISO 8601 string
+    int32 limit = 6;                // 分页大小
+    int32 offset = 7;               // 偏移量
 }
 
 message QueryAuditLogsResponse {
