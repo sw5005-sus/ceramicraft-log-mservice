@@ -41,6 +41,9 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
                 actor_id=request.actor_id,
                 role=role_name,
                 description=request.description,
+                occurred_at=datetime.fromisoformat(
+                    request.occurred_at.replace("Z", "+00:00")
+                ),
                 created_at=datetime.now(timezone.utc),
                 previous_hash=prev_hash,
             )
@@ -120,6 +123,7 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
                         actor_id=entry.actor_id,
                         role=audit_log_pb2.Role.Value(entry.role),
                         description=entry.description,
+                        occurred_at=entry.occurred_at.isoformat(),
                         created_at=entry.created_at.isoformat(),
                         previous_hash=entry.previous_hash,
                         current_hash=entry.current_hash,

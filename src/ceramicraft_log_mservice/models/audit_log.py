@@ -17,6 +17,7 @@ class AuditLogEntry(Base):
         String(20), nullable=False
     )  # Enum or string, string is safer for cross-service
     description = Column(String(500), nullable=False)
+    occurred_at = Column(DateTime(timezone=True), nullable=False, index=True)
     created_at = Column(
         DateTime(timezone=True),
         default=lambda: datetime.now(timezone.utc),
@@ -40,6 +41,7 @@ class AuditLogEntry(Base):
         # Ensure consistent ordering for hashing
         content = (
             f"{self.actor_id}|{self.role}|{self.description}|"
+            f"{self.occurred_at.isoformat()}|"
             f"{self.created_at.isoformat()}|"
             f"{self.previous_hash}"
         )

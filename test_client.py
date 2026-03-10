@@ -1,3 +1,5 @@
+from datetime import datetime, timezone
+
 import grpc
 
 from ceramicraft_log_mservice.pb import audit_log_pb2, audit_log_pb2_grpc
@@ -13,6 +15,7 @@ def run():
                 actor_id=101,
                 role=audit_log_pb2.MERCHANT,
                 description="Merchant 101 updated product stock",
+                occurred_at=datetime.now(timezone.utc).isoformat(),
             )
         )
         print(f"Record 1 success: {response.success}, event_id: {response.event_id}")
@@ -23,6 +26,7 @@ def run():
                 actor_id=202,
                 role=audit_log_pb2.CUSTOMER,
                 description="Customer 202 completed payment",
+                occurred_at=datetime.now(timezone.utc).isoformat(),
             )
         )
         print(f"Record 2 success: {response2.success}, event_id: {response2.event_id}")
@@ -36,7 +40,7 @@ def run():
         print(f"Total count: {query_response.total_count}")
         for log in query_response.logs:
             print(
-                f"[{log.created_at}] ID: {log.id}, Actor: {log.actor_id}, Role: {audit_log_pb2.Role.Name(log.role)}, Desc: {log.description}"
+                f"[{log.occurred_at}](rcv {log.created_at}) ID: {log.id}, Actor: {log.actor_id}, Role: {audit_log_pb2.Role.Name(log.role)}, Desc: {log.description}"
             )
             print(
                 f"    PrevHash: {log.previous_hash[:16]}... CurrHash: {log.current_hash[:16]}..."
@@ -51,7 +55,7 @@ def run():
         print(f"Total count for actor 101: {query_response_actor.total_count}")
         for log in query_response_actor.logs:
             print(
-                f"[{log.created_at}] ID: {log.id}, Actor: {log.actor_id}, Desc: {log.description}"
+                f"[{log.occurred_at}](rcv {log.created_at}) ID: {log.id}, Actor: {log.actor_id}, Desc: {log.description}"
             )
 
         # Test validation

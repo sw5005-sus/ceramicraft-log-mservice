@@ -13,6 +13,7 @@ message RecordAuditLogRequest {
     int64 actor_id = 1;       // 操作人（商家或顾客的ID）
     Role role = 2;            // 操作人角色
     string description = 3;   // 操作描述（包含原动作、资源对象、额外信息等）
+    string occurred_at = 4;   // 事件实际发生时间 ISO 8601 string
 }
 
 message RecordAuditLogResponse {
@@ -25,9 +26,10 @@ message AuditLog {
     int64 actor_id = 2;
     Role role = 3;
     string description = 4;
-    string created_at = 5;    // ISO 8601 string
-    string previous_hash = 6;
-    string current_hash = 7;
+    string occurred_at = 5;    // ISO 8601 string, 事件实际发生时间
+    string created_at = 6;    // ISO 8601 string
+    string previous_hash = 7;
+    string current_hash = 8;
 }
 
 message QueryAuditLogsRequest {

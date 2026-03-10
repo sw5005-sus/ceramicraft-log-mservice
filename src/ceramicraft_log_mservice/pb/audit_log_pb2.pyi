@@ -19,14 +19,16 @@ CUSTOMER: Role
 SYSTEM: Role
 
 class RecordAuditLogRequest(_message.Message):
-    __slots__ = ("actor_id", "role", "description")
+    __slots__ = ("actor_id", "role", "description", "occurred_at")
     ACTOR_ID_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    OCCURRED_AT_FIELD_NUMBER: _ClassVar[int]
     actor_id: int
     role: Role
     description: str
-    def __init__(self, actor_id: _Optional[int] = ..., role: _Optional[_Union[Role, str]] = ..., description: _Optional[str] = ...) -> None: ...
+    occurred_at: str
+    def __init__(self, actor_id: _Optional[int] = ..., role: _Optional[_Union[Role, str]] = ..., description: _Optional[str] = ..., occurred_at: _Optional[str] = ...) -> None: ...
 
 class RecordAuditLogResponse(_message.Message):
     __slots__ = ("success", "event_id")
@@ -37,11 +39,12 @@ class RecordAuditLogResponse(_message.Message):
     def __init__(self, success: bool = ..., event_id: _Optional[str] = ...) -> None: ...
 
 class AuditLog(_message.Message):
-    __slots__ = ("id", "actor_id", "role", "description", "created_at", "previous_hash", "current_hash")
+    __slots__ = ("id", "actor_id", "role", "description", "occurred_at", "created_at", "previous_hash", "current_hash")
     ID_FIELD_NUMBER: _ClassVar[int]
     ACTOR_ID_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
     DESCRIPTION_FIELD_NUMBER: _ClassVar[int]
+    OCCURRED_AT_FIELD_NUMBER: _ClassVar[int]
     CREATED_AT_FIELD_NUMBER: _ClassVar[int]
     PREVIOUS_HASH_FIELD_NUMBER: _ClassVar[int]
     CURRENT_HASH_FIELD_NUMBER: _ClassVar[int]
@@ -49,10 +52,11 @@ class AuditLog(_message.Message):
     actor_id: int
     role: Role
     description: str
+    occurred_at: str
     created_at: str
     previous_hash: str
     current_hash: str
-    def __init__(self, id: _Optional[str] = ..., actor_id: _Optional[int] = ..., role: _Optional[_Union[Role, str]] = ..., description: _Optional[str] = ..., created_at: _Optional[str] = ..., previous_hash: _Optional[str] = ..., current_hash: _Optional[str] = ...) -> None: ...
+    def __init__(self, id: _Optional[str] = ..., actor_id: _Optional[int] = ..., role: _Optional[_Union[Role, str]] = ..., description: _Optional[str] = ..., occurred_at: _Optional[str] = ..., created_at: _Optional[str] = ..., previous_hash: _Optional[str] = ..., current_hash: _Optional[str] = ...) -> None: ...
 
 class QueryAuditLogsRequest(_message.Message):
     __slots__ = ("actor_id", "role", "start_time", "end_time", "limit", "offset")

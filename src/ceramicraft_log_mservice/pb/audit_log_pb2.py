@@ -24,29 +24,29 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x61udit_log.proto\x12\x0f\x63\x65ramicraft.log\"c\n\x15RecordAuditLogRequest\x12\x10\n\x08\x61\x63tor_id\x18\x01 \x01(\x03\x12#\n\x04role\x18\x02 \x01(\x0e\x32\x15.ceramicraft.log.Role\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\";\n\x16RecordAuditLogResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x10\n\x08\x65vent_id\x18\x02 \x01(\t\"\xa3\x01\n\x08\x41uditLog\x12\n\n\x02id\x18\x01 \x01(\t\x12\x10\n\x08\x61\x63tor_id\x18\x02 \x01(\x03\x12#\n\x04role\x18\x03 \x01(\x0e\x32\x15.ceramicraft.log.Role\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x12\n\ncreated_at\x18\x05 \x01(\t\x12\x15\n\rprevious_hash\x18\x06 \x01(\t\x12\x14\n\x0c\x63urrent_hash\x18\x07 \x01(\t\"\xd9\x01\n\x15QueryAuditLogsRequest\x12\x15\n\x08\x61\x63tor_id\x18\x01 \x01(\x03H\x00\x88\x01\x01\x12(\n\x04role\x18\x02 \x01(\x0e\x32\x15.ceramicraft.log.RoleH\x01\x88\x01\x01\x12\x17\n\nstart_time\x18\x03 \x01(\tH\x02\x88\x01\x01\x12\x15\n\x08\x65nd_time\x18\x04 \x01(\tH\x03\x88\x01\x01\x12\r\n\x05limit\x18\x05 \x01(\x05\x12\x0e\n\x06offset\x18\x06 \x01(\x05\x42\x0b\n\t_actor_idB\x07\n\x05_roleB\r\n\x0b_start_timeB\x0b\n\t_end_time\"V\n\x16QueryAuditLogsResponse\x12\'\n\x04logs\x18\x01 \x03(\x0b\x32\x19.ceramicraft.log.AuditLog\x12\x13\n\x0btotal_count\x18\x02 \x01(\x05\"h\n\x1aVerifyAuditLogChainRequest\x12\x17\n\nstart_time\x18\x01 \x01(\tH\x00\x88\x01\x01\x12\x15\n\x08\x65nd_time\x18\x02 \x01(\tH\x01\x88\x01\x01\x42\r\n\x0b_start_timeB\x0b\n\t_end_time\"W\n\x1bVerifyAuditLogChainResponse\x12\x10\n\x08is_valid\x18\x01 \x01(\x08\x12\x15\n\rfailed_log_id\x18\x02 \x01(\t\x12\x0f\n\x07message\x18\x03 \x01(\t*D\n\x04Role\x12\x14\n\x10ROLE_UNSPECIFIED\x10\x00\x12\x0c\n\x08MERCHANT\x10\x01\x12\x0c\n\x08\x43USTOMER\x10\x02\x12\n\n\x06SYSTEM\x10\x03\x32\xc9\x02\n\x0f\x41uditLogService\x12\x61\n\x0eRecordAuditLog\x12&.ceramicraft.log.RecordAuditLogRequest\x1a\'.ceramicraft.log.RecordAuditLogResponse\x12\x61\n\x0eQueryAuditLogs\x12&.ceramicraft.log.QueryAuditLogsRequest\x1a\'.ceramicraft.log.QueryAuditLogsResponse\x12p\n\x13VerifyAuditLogChain\x12+.ceramicraft.log.VerifyAuditLogChainRequest\x1a,.ceramicraft.log.VerifyAuditLogChainResponseb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0f\x61udit_log.proto\x12\x0f\x63\x65ramicraft.log\"x\n\x15RecordAuditLogRequest\x12\x10\n\x08\x61\x63tor_id\x18\x01 \x01(\x03\x12#\n\x04role\x18\x02 \x01(\x0e\x32\x15.ceramicraft.log.Role\x12\x13\n\x0b\x64\x65scription\x18\x03 \x01(\t\x12\x13\n\x0boccurred_at\x18\x04 \x01(\t\";\n\x16RecordAuditLogResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x10\n\x08\x65vent_id\x18\x02 \x01(\t\"\xb8\x01\n\x08\x41uditLog\x12\n\n\x02id\x18\x01 \x01(\t\x12\x10\n\x08\x61\x63tor_id\x18\x02 \x01(\x03\x12#\n\x04role\x18\x03 \x01(\x0e\x32\x15.ceramicraft.log.Role\x12\x13\n\x0b\x64\x65scription\x18\x04 \x01(\t\x12\x13\n\x0boccurred_at\x18\x05 \x01(\t\x12\x12\n\ncreated_at\x18\x06 \x01(\t\x12\x15\n\rprevious_hash\x18\x07 \x01(\t\x12\x14\n\x0c\x63urrent_hash\x18\x08 \x01(\t\"\xd9\x01\n\x15QueryAuditLogsRequest\x12\x15\n\x08\x61\x63tor_id\x18\x01 \x01(\x03H\x00\x88\x01\x01\x12(\n\x04role\x18\x02 \x01(\x0e\x32\x15.ceramicraft.log.RoleH\x01\x88\x01\x01\x12\x17\n\nstart_time\x18\x03 \x01(\tH\x02\x88\x01\x01\x12\x15\n\x08\x65nd_time\x18\x04 \x01(\tH\x03\x88\x01\x01\x12\r\n\x05limit\x18\x05 \x01(\x05\x12\x0e\n\x06offset\x18\x06 \x01(\x05\x42\x0b\n\t_actor_idB\x07\n\x05_roleB\r\n\x0b_start_timeB\x0b\n\t_end_time\"V\n\x16QueryAuditLogsResponse\x12\'\n\x04logs\x18\x01 \x03(\x0b\x32\x19.ceramicraft.log.AuditLog\x12\x13\n\x0btotal_count\x18\x02 \x01(\x05\"h\n\x1aVerifyAuditLogChainRequest\x12\x17\n\nstart_time\x18\x01 \x01(\tH\x00\x88\x01\x01\x12\x15\n\x08\x65nd_time\x18\x02 \x01(\tH\x01\x88\x01\x01\x42\r\n\x0b_start_timeB\x0b\n\t_end_time\"W\n\x1bVerifyAuditLogChainResponse\x12\x10\n\x08is_valid\x18\x01 \x01(\x08\x12\x15\n\rfailed_log_id\x18\x02 \x01(\t\x12\x0f\n\x07message\x18\x03 \x01(\t*D\n\x04Role\x12\x14\n\x10ROLE_UNSPECIFIED\x10\x00\x12\x0c\n\x08MERCHANT\x10\x01\x12\x0c\n\x08\x43USTOMER\x10\x02\x12\n\n\x06SYSTEM\x10\x03\x32\xc9\x02\n\x0f\x41uditLogService\x12\x61\n\x0eRecordAuditLog\x12&.ceramicraft.log.RecordAuditLogRequest\x1a\'.ceramicraft.log.RecordAuditLogResponse\x12\x61\n\x0eQueryAuditLogs\x12&.ceramicraft.log.QueryAuditLogsRequest\x1a\'.ceramicraft.log.QueryAuditLogsResponse\x12p\n\x13VerifyAuditLogChain\x12+.ceramicraft.log.VerifyAuditLogChainRequest\x1a,.ceramicraft.log.VerifyAuditLogChainResponseb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'audit_log_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_ROLE']._serialized_start=867
-  _globals['_ROLE']._serialized_end=935
+  _globals['_ROLE']._serialized_start=909
+  _globals['_ROLE']._serialized_end=977
   _globals['_RECORDAUDITLOGREQUEST']._serialized_start=36
-  _globals['_RECORDAUDITLOGREQUEST']._serialized_end=135
-  _globals['_RECORDAUDITLOGRESPONSE']._serialized_start=137
-  _globals['_RECORDAUDITLOGRESPONSE']._serialized_end=196
-  _globals['_AUDITLOG']._serialized_start=199
-  _globals['_AUDITLOG']._serialized_end=362
-  _globals['_QUERYAUDITLOGSREQUEST']._serialized_start=365
-  _globals['_QUERYAUDITLOGSREQUEST']._serialized_end=582
-  _globals['_QUERYAUDITLOGSRESPONSE']._serialized_start=584
-  _globals['_QUERYAUDITLOGSRESPONSE']._serialized_end=670
-  _globals['_VERIFYAUDITLOGCHAINREQUEST']._serialized_start=672
-  _globals['_VERIFYAUDITLOGCHAINREQUEST']._serialized_end=776
-  _globals['_VERIFYAUDITLOGCHAINRESPONSE']._serialized_start=778
-  _globals['_VERIFYAUDITLOGCHAINRESPONSE']._serialized_end=865
-  _globals['_AUDITLOGSERVICE']._serialized_start=938
-  _globals['_AUDITLOGSERVICE']._serialized_end=1267
+  _globals['_RECORDAUDITLOGREQUEST']._serialized_end=156
+  _globals['_RECORDAUDITLOGRESPONSE']._serialized_start=158
+  _globals['_RECORDAUDITLOGRESPONSE']._serialized_end=217
+  _globals['_AUDITLOG']._serialized_start=220
+  _globals['_AUDITLOG']._serialized_end=404
+  _globals['_QUERYAUDITLOGSREQUEST']._serialized_start=407
+  _globals['_QUERYAUDITLOGSREQUEST']._serialized_end=624
+  _globals['_QUERYAUDITLOGSRESPONSE']._serialized_start=626
+  _globals['_QUERYAUDITLOGSRESPONSE']._serialized_end=712
+  _globals['_VERIFYAUDITLOGCHAINREQUEST']._serialized_start=714
+  _globals['_VERIFYAUDITLOGCHAINREQUEST']._serialized_end=818
+  _globals['_VERIFYAUDITLOGCHAINRESPONSE']._serialized_start=820
+  _globals['_VERIFYAUDITLOGCHAINRESPONSE']._serialized_end=907
+  _globals['_AUDITLOGSERVICE']._serialized_start=980
+  _globals['_AUDITLOGSERVICE']._serialized_end=1309
 # @@protoc_insertion_point(module_scope)
