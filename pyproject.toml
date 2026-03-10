@@ -1,0 +1,18 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "ceramicraft-log-mservice"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dttb>=0.3.2",
+    "grpcio>=1.78.0",
+    "grpcio-tools>=1.78.0",
+    "psycopg>=3.3.3",
+    "python-dotenv>=1.2.2",
+    "sqlalchemy>=2.0.48",
+]
