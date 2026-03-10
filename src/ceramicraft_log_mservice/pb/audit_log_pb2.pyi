@@ -26,7 +26,7 @@ class RecordAuditLogResponse(_message.Message):
     EVENT_ID_FIELD_NUMBER: _ClassVar[int]
     success: bool
     event_id: str
-    def __init__(self, success: bool = ..., event_id: _Optional[str] = ...) -> None: ...
+    def __init__(self, success: _Optional[bool] = ..., event_id: _Optional[str] = ...) -> None: ...
 
 class AuditLog(_message.Message):
     __slots__ = ("id", "service", "actor_id", "role", "description", "occurred_at", "created_at", "previous_hash", "current_hash")
@@ -92,4 +92,4 @@ class VerifyAuditLogChainResponse(_message.Message):
     is_valid: bool
     failed_log_id: str
     message: str
-    def __init__(self, is_valid: bool = ..., failed_log_id: _Optional[str] = ..., message: _Optional[str] = ...) -> None: ...
+    def __init__(self, is_valid: _Optional[bool] = ..., failed_log_id: _Optional[str] = ..., message: _Optional[str] = ...) -> None: ...
