@@ -77,3 +77,21 @@ class QueryAuditLogsResponse(_message.Message):
     logs: _containers.RepeatedCompositeFieldContainer[AuditLog]
     total_count: int
     def __init__(self, logs: _Optional[_Iterable[_Union[AuditLog, _Mapping]]] = ..., total_count: _Optional[int] = ...) -> None: ...
+
+class VerifyAuditLogChainRequest(_message.Message):
+    __slots__ = ("start_time", "end_time")
+    START_TIME_FIELD_NUMBER: _ClassVar[int]
+    END_TIME_FIELD_NUMBER: _ClassVar[int]
+    start_time: str
+    end_time: str
+    def __init__(self, start_time: _Optional[str] = ..., end_time: _Optional[str] = ...) -> None: ...
+
+class VerifyAuditLogChainResponse(_message.Message):
+    __slots__ = ("is_valid", "failed_log_id", "message")
+    IS_VALID_FIELD_NUMBER: _ClassVar[int]
+    FAILED_LOG_ID_FIELD_NUMBER: _ClassVar[int]
+    MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    is_valid: bool
+    failed_log_id: str
+    message: str
+    def __init__(self, is_valid: bool = ..., failed_log_id: _Optional[str] = ..., message: _Optional[str] = ...) -> None: ...

@@ -136,3 +136,87 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
             return audit_log_pb2.QueryAuditLogsResponse()
         finally:
             db.close()
+
+    def VerifyAuditLogChain(
+        self,
+        request: audit_log_pb2.VerifyAuditLogChainRequest,
+        context: grpc.ServicerContext,
+    ) -> audit_log_pb2.VerifyAuditLogChainResponse:
+        db: Session = self.session_factory()
+        try:
+            # Order by created_at ascending to reconstruct the chain from start to end
+            query = db.query(AuditLogEntry).order_by(
+                AuditLogEntry.created_at.asc(), AuditLogEntry.previous_hash.asc()
+            )
+
+            if request.HasField("start_time"):
+                try:
+                    start_dt = datetime.fromisoformat(
+                        request.start_time.replace("Z", "+00:00")
+                    )
+                    query = query.filter(AuditLogEntry.created_at >= start_dt)
+                except ValueError:
+                    context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+                    context.set_details("Invalid start_time format, expected ISO 8601")
+                    return audit_log_pb2.VerifyAuditLogChainResponse(
+                        is_valid=False, message="Invalid start_time format"
+                    )
+
+            if request.HasField("end_time"):
+                try:
+                    end_dt = datetime.fromisoformat(
+                        request.end_time.replace("Z", "+00:00")
+                    )
+                    query = query.filter(AuditLogEntry.created_at <= end_dt)
+                except ValueError:
+                    context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+                    context.set_details("Invalid end_time format, expected ISO 8601")
+                    return audit_log_pb2.VerifyAuditLogChainResponse(
+                        is_valid=False, message="Invalid end_time format"
+                    )
+
+            entries = query.all()
+
+            if not entries:
+                return audit_log_pb2.VerifyAuditLogChainResponse(
+                    is_valid=True, message="No audit logs to verify."
+                )
+
+            # Validate each entry
+            # To handle cases where we are verifying a subset of logs (via date filters),
+            # we initialize expected_prev with the previous_hash of the first retrieved entry.
+            expected_prev = entries[0].previous_hash
+
+            for entry in entries:
+                # 1. Chain validation: check matching previous hashes
+                if entry.previous_hash != expected_prev:
+                    return audit_log_pb2.VerifyAuditLogChainResponse(
+                        is_valid=False,
+                        failed_log_id=str(entry.id),
+                        message=f"Hash chain broken. ID: {entry.id}. Expected prev hash {expected_prev}, found {entry.previous_hash}",
+                    )
+
+                # 2. Tampering validation: check if hash of current content is valid
+                calculated_hash = entry.calculate_hash()
+                if entry.current_hash != calculated_hash:
+                    return audit_log_pb2.VerifyAuditLogChainResponse(
+                        is_valid=False,
+                        failed_log_id=str(entry.id),
+                        message=f"Data tampered for ID {entry.id}. Calculated hash {calculated_hash} differs from stored hash {entry.current_hash}",
+                    )
+
+                # Setup check for next iteration
+                expected_prev = entry.current_hash
+
+            return audit_log_pb2.VerifyAuditLogChainResponse(
+                is_valid=True, message=f"Successfully verified {len(entries)} logs."
+            )
+
+        except Exception as e:
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(f"Internal server error: {e}")
+            return audit_log_pb2.VerifyAuditLogChainResponse(
+                is_valid=False, message=f"Internal error: {e}"
+            )
+        finally:
+            db.close()

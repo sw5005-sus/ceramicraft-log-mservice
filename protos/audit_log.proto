@@ -44,7 +44,20 @@ message QueryAuditLogsResponse {
     int32 total_count = 2;
 }
 
+message VerifyAuditLogChainRequest {
+    // 可以为空，默认验证全量。如果以后需要按时间范围验证可以扩充
+    optional string start_time = 1; // ISO 8601 string
+    optional string end_time = 2;   // ISO 8601 string
+}
+
+message VerifyAuditLogChainResponse {
+    bool is_valid = 1;
+    string failed_log_id = 2;       // 如果验证失败，这里返回发生断链或篡改的日志ID
+    string message = 3;             // 错误详情或者成功提示
+}
+
 service AuditLogService {
     rpc RecordAuditLog (RecordAuditLogRequest) returns (RecordAuditLogResponse);
     rpc QueryAuditLogs (QueryAuditLogsRequest) returns (QueryAuditLogsResponse);
+    rpc VerifyAuditLogChain (VerifyAuditLogChainRequest) returns (VerifyAuditLogChainResponse);
 }

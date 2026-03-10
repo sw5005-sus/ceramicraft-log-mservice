@@ -44,6 +44,11 @@ class AuditLogServiceStub(object):
                 request_serializer=audit__log__pb2.QueryAuditLogsRequest.SerializeToString,
                 response_deserializer=audit__log__pb2.QueryAuditLogsResponse.FromString,
                 _registered_method=True)
+        self.VerifyAuditLogChain = channel.unary_unary(
+                '/ceramicraft.log.AuditLogService/VerifyAuditLogChain',
+                request_serializer=audit__log__pb2.VerifyAuditLogChainRequest.SerializeToString,
+                response_deserializer=audit__log__pb2.VerifyAuditLogChainResponse.FromString,
+                _registered_method=True)
 
 
 class AuditLogServiceServicer(object):
@@ -61,6 +66,12 @@ class AuditLogServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def VerifyAuditLogChain(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_AuditLogServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -73,6 +84,11 @@ def add_AuditLogServiceServicer_to_server(servicer, server):
                     servicer.QueryAuditLogs,
                     request_deserializer=audit__log__pb2.QueryAuditLogsRequest.FromString,
                     response_serializer=audit__log__pb2.QueryAuditLogsResponse.SerializeToString,
+            ),
+            'VerifyAuditLogChain': grpc.unary_unary_rpc_method_handler(
+                    servicer.VerifyAuditLogChain,
+                    request_deserializer=audit__log__pb2.VerifyAuditLogChainRequest.FromString,
+                    response_serializer=audit__log__pb2.VerifyAuditLogChainResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -129,6 +145,33 @@ class AuditLogService(object):
             '/ceramicraft.log.AuditLogService/QueryAuditLogs',
             audit__log__pb2.QueryAuditLogsRequest.SerializeToString,
             audit__log__pb2.QueryAuditLogsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def VerifyAuditLogChain(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/ceramicraft.log.AuditLogService/VerifyAuditLogChain',
+            audit__log__pb2.VerifyAuditLogChainRequest.SerializeToString,
+            audit__log__pb2.VerifyAuditLogChainResponse.FromString,
             options,
             channel_credentials,
             insecure,

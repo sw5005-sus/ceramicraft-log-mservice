@@ -54,6 +54,17 @@ def run():
                 f"[{log.created_at}] ID: {log.id}, Actor: {log.actor_id}, Desc: {log.description}"
             )
 
+        # Test validation
+        print("-" * 40)
+        print("Testing VerifyAuditLogChain:")
+        verify_response = stub.VerifyAuditLogChain(
+            audit_log_pb2.VerifyAuditLogChainRequest()
+        )
+        print(f"Is valid? {verify_response.is_valid}")
+        print(f"Message: {verify_response.message}")
+        if not verify_response.is_valid:
+            print(f"Failed Log ID: {verify_response.failed_log_id}")
+
 
 if __name__ == "__main__":
     run()
