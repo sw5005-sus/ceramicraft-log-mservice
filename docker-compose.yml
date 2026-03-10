@@ -3,9 +3,9 @@ services:
     image: postgres:16-alpine
     container_name: ceramicraft_log_db
     environment:
-      POSTGRES_USER: ${DB_USER:-user}
-      POSTGRES_PASSWORD: ${DB_PASSWORD:-password}
-      POSTGRES_DB: ${DB_NAME:-ceramicraft_log}
+      POSTGRES_USER: ${LOG_MSERVICE_DB_USERNAME:-user}
+      POSTGRES_PASSWORD: ${LOG_MSERVICE_DB_PASSWORD:-password}
+      POSTGRES_DB: ${LOG_MSERVICE_DB_NAME:-ceramicraft_log}
     ports:
       - "5432:5432"
     volumes:

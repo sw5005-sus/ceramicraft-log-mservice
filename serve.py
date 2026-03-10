@@ -21,18 +21,16 @@ dttb.apply()
 dotenv.load_dotenv()
 
 # Build connection string from environment or use sensible defaults
-DB_USER = os.getenv("DB_USER", "user")
-DB_PASSWORD = os.getenv("DB_PASSWORD", "password")
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT", "5432")
-DB_NAME = os.getenv("DB_NAME", "ceramicraft_log")
+LOG_MSERVICE_DB_USERNAME = os.getenv("LOG_MSERVICE_DB_USERNAME", "user")
+LOG_MSERVICE_DB_PASSWORD = os.getenv("LOG_MSERVICE_DB_PASSWORD", "password")
+LOG_MSERVICE_DB_HOST = os.getenv("LOG_MSERVICE_DB_HOST", "localhost")
+LOG_MSERVICE_DB_PORT = os.getenv("LOG_MSERVICE_DB_PORT", "5432")
+LOG_MSERVICE_DB_NAME = os.getenv("LOG_MSERVICE_DB_NAME", "ceramicraft_log")
 
-GRPC_HOST = os.getenv("GRPC_HOST", "[::]")
-GRPC_PORT = os.getenv("GRPC_PORT", "50051")
+LOG_MSERVICE_GRPC_HOST = os.getenv("LOG_MSERVICE_GRPC_HOST", "[::]")
+LOG_MSERVICE_GRPC_PORT = os.getenv("LOG_MSERVICE_GRPC_PORT", "50051")
 
-DATABASE_URL = (
-    f"postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-)
+DATABASE_URL = f"postgresql+psycopg://{LOG_MSERVICE_DB_USERNAME}:{LOG_MSERVICE_DB_PASSWORD}@{LOG_MSERVICE_DB_HOST}:{LOG_MSERVICE_DB_PORT}/{LOG_MSERVICE_DB_NAME}"
 
 # Engine setup
 engine = create_engine(DATABASE_URL)
@@ -52,8 +50,12 @@ def reset_db() -> None:
 
 @app.command()
 def start(
-    grpc_host: str = typer.Option(GRPC_HOST, "--host", help="gRPC server host"),
-    grpc_port: str = typer.Option(GRPC_PORT, "--port", help="gRPC server port"),
+    LOG_MSERVICE_GRPC_HOST: str = typer.Option(
+        LOG_MSERVICE_GRPC_HOST, "--host", help="gRPC server host"
+    ),
+    LOG_MSERVICE_GRPC_PORT: str = typer.Option(
+        LOG_MSERVICE_GRPC_PORT, "--port", help="gRPC server port"
+    ),
 ) -> None:
     """Start the gRPC server."""
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
@@ -68,7 +70,7 @@ def start(
     audit_log_pb2_grpc.add_AuditLogServiceServicer_to_server(
         AuditLogService(session_factory=SessionLocal), server
     )
-    grpc_address = f"{grpc_host}:{grpc_port}"
+    grpc_address = f"{LOG_MSERVICE_GRPC_HOST}:{LOG_MSERVICE_GRPC_PORT}"
     server.add_insecure_port(grpc_address)
 
     typer.secho(f"Starting gRPC Server on {grpc_address}...", fg=typer.colors.CYAN)
