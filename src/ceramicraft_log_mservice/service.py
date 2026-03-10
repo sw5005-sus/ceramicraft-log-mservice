@@ -62,3 +62,77 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
             return audit_log_pb2.RecordAuditLogResponse(success=False)
         finally:
             db.close()
+
+    def QueryAuditLogs(
+        self,
+        request: audit_log_pb2.QueryAuditLogsRequest,
+        context: grpc.ServicerContext,
+    ) -> audit_log_pb2.QueryAuditLogsResponse:
+        db: Session = self.session_factory()
+        try:
+            query = db.query(AuditLogEntry)
+
+            if request.HasField("actor_id"):
+                query = query.filter(AuditLogEntry.actor_id == request.actor_id)
+            if (
+                request.HasField("role")
+                and request.role != audit_log_pb2.ROLE_UNSPECIFIED
+            ):
+                role_name = audit_log_pb2.Role.Name(request.role)
+                query = query.filter(AuditLogEntry.role == role_name)
+            if request.HasField("start_time"):
+                try:
+                    start_dt = datetime.fromisoformat(
+                        request.start_time.replace("Z", "+00:00")
+                    )
+                    query = query.filter(AuditLogEntry.created_at >= start_dt)
+                except ValueError:
+                    context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+                    context.set_details("Invalid start_time format, expected ISO 8601")
+                    return audit_log_pb2.QueryAuditLogsResponse()
+            if request.HasField("end_time"):
+                try:
+                    end_dt = datetime.fromisoformat(
+                        request.end_time.replace("Z", "+00:00")
+                    )
+                    query = query.filter(AuditLogEntry.created_at <= end_dt)
+                except ValueError:
+                    context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+                    context.set_details("Invalid end_time format, expected ISO 8601")
+                    return audit_log_pb2.QueryAuditLogsResponse()
+
+            total_count = query.count()
+
+            query = query.order_by(AuditLogEntry.created_at.desc())
+
+            if request.limit > 0:
+                query = query.limit(request.limit)
+            if request.offset > 0:
+                query = query.offset(request.offset)
+
+            entries = query.all()
+
+            pb_logs = []
+            for entry in entries:
+                pb_logs.append(
+                    audit_log_pb2.AuditLog(
+                        id=str(entry.id),
+                        actor_id=entry.actor_id,
+                        role=audit_log_pb2.Role.Value(entry.role),
+                        description=entry.description,
+                        created_at=entry.created_at.isoformat(),
+                        previous_hash=entry.previous_hash,
+                        current_hash=entry.current_hash,
+                    )
+                )
+
+            return audit_log_pb2.QueryAuditLogsResponse(
+                logs=pb_logs, total_count=total_count
+            )
+
+        except Exception as e:
+            context.set_code(grpc.StatusCode.INTERNAL)
+            context.set_details(f"Internal server error: {e}")
+            return audit_log_pb2.QueryAuditLogsResponse()
+        finally:
+            db.close()

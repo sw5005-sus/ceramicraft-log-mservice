@@ -20,6 +20,31 @@ message RecordAuditLogResponse {
     string event_id = 2;      // 返回生成的日志记录ID
 }
 
+message AuditLog {
+    string id = 1;
+    int64 actor_id = 2;
+    Role role = 3;
+    string description = 4;
+    string created_at = 5;    // ISO 8601 string
+    string previous_hash = 6;
+    string current_hash = 7;
+}
+
+message QueryAuditLogsRequest {
+    optional int64 actor_id = 1;
+    optional Role role = 2;
+    optional string start_time = 3; // ISO 8601 string
+    optional string end_time = 4;   // ISO 8601 string
+    int32 limit = 5;                // 分页大小
+    int32 offset = 6;               // 偏移量
+}
+
+message QueryAuditLogsResponse {
+    repeated AuditLog logs = 1;
+    int32 total_count = 2;
+}
+
 service AuditLogService {
     rpc RecordAuditLog (RecordAuditLogRequest) returns (RecordAuditLogResponse);
+    rpc QueryAuditLogs (QueryAuditLogsRequest) returns (QueryAuditLogsResponse);
 }
