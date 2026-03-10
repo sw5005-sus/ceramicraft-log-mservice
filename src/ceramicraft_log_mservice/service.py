@@ -34,12 +34,10 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
             # If no genesis entry, use a "0000..." hash
             prev_hash = last_entry.current_hash if last_entry else "0" * 64
 
-            role_name = audit_log_pb2.Role.Name(request.role)
-
             new_entry = AuditLogEntry(
                 id=str(uuid.uuid4()),
                 actor_id=request.actor_id,
-                role=role_name,
+                role=request.role,
                 description=request.description,
                 occurred_at=datetime.fromisoformat(
                     request.occurred_at.replace("Z", "+00:00")
@@ -77,12 +75,8 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
 
             if request.HasField("actor_id"):
                 query = query.filter(AuditLogEntry.actor_id == request.actor_id)
-            if (
-                request.HasField("role")
-                and request.role != audit_log_pb2.ROLE_UNSPECIFIED
-            ):
-                role_name = audit_log_pb2.Role.Name(request.role)
-                query = query.filter(AuditLogEntry.role == role_name)
+            if request.HasField("role") and request.role:
+                query = query.filter(AuditLogEntry.role == request.role)
             if request.HasField("start_time"):
                 try:
                     start_dt = datetime.fromisoformat(
@@ -121,7 +115,7 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
                     audit_log_pb2.AuditLog(
                         id=str(entry.id),
                         actor_id=entry.actor_id,
-                        role=audit_log_pb2.Role.Value(entry.role),
+                        role=entry.role,
                         description=entry.description,
                         occurred_at=entry.occurred_at.isoformat(),
                         created_at=entry.created_at.isoformat(),

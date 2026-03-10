@@ -23,7 +23,7 @@ def main() -> None:
         response = stub.RecordAuditLog(
             audit_log_pb2.RecordAuditLogRequest(
                 actor_id=101,
-                role=audit_log_pb2.MERCHANT,
+                role="MERCHANT",
                 description="Merchant 101 updated product stock",
                 occurred_at=datetime.now(timezone.utc).isoformat(),
             )
@@ -34,7 +34,7 @@ def main() -> None:
         response2 = stub.RecordAuditLog(
             audit_log_pb2.RecordAuditLogRequest(
                 actor_id=202,
-                role=audit_log_pb2.CUSTOMER,
+                role="CUSTOMER",
                 description="Customer 202 completed payment",
                 occurred_at=datetime.now(timezone.utc).isoformat(),
             )
@@ -50,7 +50,7 @@ def main() -> None:
         print(f"Total count: {query_response.total_count}")
         for log in query_response.logs:
             print(
-                f"[{log.occurred_at}](rcv {log.created_at}) ID: {log.id}, Actor: {log.actor_id}, Role: {audit_log_pb2.Role.Name(log.role)}, Desc: {log.description}"
+                f"[{log.occurred_at}](rcv {log.created_at}) ID: {log.id}, Actor: {log.actor_id}, Role: {log.role}, Desc: {log.description}"
             )
             print(
                 f"    PrevHash: {log.previous_hash[:16]}... CurrHash: {log.current_hash[:16]}..."
