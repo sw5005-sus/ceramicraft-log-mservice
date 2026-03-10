@@ -1,12 +1,22 @@
+import os
 from datetime import datetime, timezone
 
+import dotenv
 import grpc
 
 from ceramicraft_log_mservice.pb import audit_log_pb2, audit_log_pb2_grpc
 
+dotenv.load_dotenv()
+
+GRPC_PORT = os.getenv("GRPC_PORT", "50051")
+_env_host = os.getenv("GRPC_HOST", "localhost")
+GRPC_HOST = "localhost" if _env_host == "[::]" else _env_host
+
 
 def run():
-    with grpc.insecure_channel("localhost:50051") as channel:
+    grpc_target = f"{GRPC_HOST}:{GRPC_PORT}"
+    print(f"Connecting to {grpc_target}...")
+    with grpc.insecure_channel(grpc_target) as channel:
         stub = audit_log_pb2_grpc.AuditLogServiceStub(channel)
 
         # Test record 1

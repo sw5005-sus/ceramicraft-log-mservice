@@ -25,6 +25,9 @@ DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "5432")
 DB_NAME = os.getenv("DB_NAME", "ceramicraft_log")
 
+GRPC_HOST = os.getenv("GRPC_HOST", "[::]")
+GRPC_PORT = os.getenv("GRPC_PORT", "50051")
+
 DATABASE_URL = (
     f"postgresql+psycopg://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
 )
@@ -49,9 +52,10 @@ def serve() -> None:
     audit_log_pb2_grpc.add_AuditLogServiceServicer_to_server(
         AuditLogService(session_factory=SessionLocal), server
     )
-    server.add_insecure_port("[::]:50051")
+    grpc_address = f"{GRPC_HOST}:{GRPC_PORT}"
+    server.add_insecure_port(grpc_address)
 
-    print("Starting gRPC Server on port 50051...")
+    print(f"Starting gRPC Server on {grpc_address}...")
     server.start()
     server.wait_for_termination()
 
