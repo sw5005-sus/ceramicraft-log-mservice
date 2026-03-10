@@ -1,16 +1,27 @@
 services:
   postgres:
-    image: postgres:16-alpine
-    container_name: ceramicraft_log_db
+    image: postgres:16
+    container_name: postgres-container
     environment:
-      POSTGRES_USER: ${LOG_MSERVICE_DB_USERNAME:-user}
-      POSTGRES_PASSWORD: ${LOG_MSERVICE_DB_PASSWORD:-password}
-      POSTGRES_DB: ${LOG_MSERVICE_DB_NAME:-ceramicraft_log}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    restart: always
+      - ./postgres:/docker-entrypoint-initdb.d:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}"]
+      timeout: 20s
+      retries: 10
+      interval: 20s
+      start_period: 30s
+
+networks:
+  default:
+    driver: "bridge"
 
 volumes:
   postgres_data:
+    driver: local

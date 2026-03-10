@@ -21,16 +21,17 @@ dttb.apply()
 dotenv.load_dotenv()
 
 # Build connection string from environment or use sensible defaults
-LOG_MSERVICE_DB_USERNAME = os.getenv("LOG_MSERVICE_DB_USERNAME", "user")
-LOG_MSERVICE_DB_PASSWORD = os.getenv("LOG_MSERVICE_DB_PASSWORD", "password")
-LOG_MSERVICE_DB_HOST = os.getenv("LOG_MSERVICE_DB_HOST", "localhost")
-LOG_MSERVICE_DB_PORT = os.getenv("LOG_MSERVICE_DB_PORT", "5432")
-LOG_MSERVICE_DB_NAME = os.getenv("LOG_MSERVICE_DB_NAME", "ceramicraft_log")
+POSTGRES_USER = os.getenv("POSTGRES_USER", "user")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD", "password")
+POSTGRES_HOST = os.getenv("POSTGRES_HOST", "localhost")
+POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
+
+LOG_MSERVICE_DB_NAME = "log_db"
 
 LOG_MSERVICE_GRPC_HOST = os.getenv("LOG_MSERVICE_GRPC_HOST", "[::]")
 LOG_MSERVICE_GRPC_PORT = os.getenv("LOG_MSERVICE_GRPC_PORT", "50051")
 
-DATABASE_URL = f"postgresql+psycopg://{LOG_MSERVICE_DB_USERNAME}:{LOG_MSERVICE_DB_PASSWORD}@{LOG_MSERVICE_DB_HOST}:{LOG_MSERVICE_DB_PORT}/{LOG_MSERVICE_DB_NAME}"
+DATABASE_URL = f"postgresql+psycopg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{LOG_MSERVICE_DB_NAME}"
 
 # Engine setup
 engine = create_engine(DATABASE_URL)

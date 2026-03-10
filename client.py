@@ -10,7 +10,7 @@ dotenv.load_dotenv()
 
 LOG_MSERVICE_GRPC_PORT = os.getenv("LOG_MSERVICE_GRPC_PORT", "50051")
 _env_host = os.getenv("LOG_MSERVICE_GRPC_HOST", "localhost")
-LOG_MSERVICE_GRPC_HOST = "localhost" if _env_host == "[::]" else _env_host
+LOG_MSERVICE_GRPC_HOST = "localhost" if "[::]" == _env_host else _env_host
 
 
 def main() -> None:
