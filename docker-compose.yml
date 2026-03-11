@@ -6,7 +6,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./postgres:/docker-entrypoint-initdb.d:ro
@@ -17,6 +17,17 @@ services:
       retries: 10
       interval: 20s
       start_period: 30s
+  log-mservice:
+    build: .
+    container_name: log-mservice-container
+    environment:
+      POSTGRES_HOST: postgres
+    ports:
+      - "${LOG_MSERVICE_GRPC_PORT}:${LOG_MSERVICE_GRPC_PORT}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
 
 networks:
   default:
