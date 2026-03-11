@@ -51,12 +51,14 @@ class AuditLog(_message.Message):
     def __init__(self, id: _Optional[str] = ..., service: _Optional[str] = ..., actor_id: _Optional[int] = ..., role: _Optional[str] = ..., description: _Optional[str] = ..., occurred_at: _Optional[str] = ..., created_at: _Optional[str] = ..., previous_hash: _Optional[str] = ..., current_hash: _Optional[str] = ...) -> None: ...
 
 class QueryAuditLogsRequest(_message.Message):
-    __slots__ = ("actor_id", "service", "role", "start_time", "end_time", "limit", "offset")
+    __slots__ = ("actor_id", "service", "role", "start_time", "end_time", "occurred_at_start", "occurred_at_end", "limit", "offset")
     ACTOR_ID_FIELD_NUMBER: _ClassVar[int]
     SERVICE_FIELD_NUMBER: _ClassVar[int]
     ROLE_FIELD_NUMBER: _ClassVar[int]
     START_TIME_FIELD_NUMBER: _ClassVar[int]
     END_TIME_FIELD_NUMBER: _ClassVar[int]
+    OCCURRED_AT_START_FIELD_NUMBER: _ClassVar[int]
+    OCCURRED_AT_END_FIELD_NUMBER: _ClassVar[int]
     LIMIT_FIELD_NUMBER: _ClassVar[int]
     OFFSET_FIELD_NUMBER: _ClassVar[int]
     actor_id: int
@@ -64,9 +66,11 @@ class QueryAuditLogsRequest(_message.Message):
     role: str
     start_time: str
     end_time: str
+    occurred_at_start: str
+    occurred_at_end: str
     limit: int
     offset: int
-    def __init__(self, actor_id: _Optional[int] = ..., service: _Optional[str] = ..., role: _Optional[str] = ..., start_time: _Optional[str] = ..., end_time: _Optional[str] = ..., limit: _Optional[int] = ..., offset: _Optional[int] = ...) -> None: ...
+    def __init__(self, actor_id: _Optional[int] = ..., service: _Optional[str] = ..., role: _Optional[str] = ..., start_time: _Optional[str] = ..., end_time: _Optional[str] = ..., occurred_at_start: _Optional[str] = ..., occurred_at_end: _Optional[str] = ..., limit: _Optional[int] = ..., offset: _Optional[int] = ...) -> None: ...
 
 class QueryAuditLogsResponse(_message.Message):
     __slots__ = ("logs", "total_count")

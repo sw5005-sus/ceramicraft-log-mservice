@@ -100,6 +100,34 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
                     context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
                     context.set_details("Invalid end_time format, expected ISO 8601")
                     return audit_log_pb2.QueryAuditLogsResponse()
+            if request.HasField("occurred_at_start"):
+                try:
+                    occurred_at_start_dt = datetime.fromisoformat(
+                        request.occurred_at_start.replace("Z", "+00:00")
+                    )
+                    query = query.filter(
+                        AuditLogEntry.occurred_at >= occurred_at_start_dt
+                    )
+                except ValueError:
+                    context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+                    context.set_details(
+                        "Invalid occurred_at_start format, expected ISO 8601"
+                    )
+                    return audit_log_pb2.QueryAuditLogsResponse()
+            if request.HasField("occurred_at_end"):
+                try:
+                    occurred_at_end_dt = datetime.fromisoformat(
+                        request.occurred_at_end.replace("Z", "+00:00")
+                    )
+                    query = query.filter(
+                        AuditLogEntry.occurred_at <= occurred_at_end_dt
+                    )
+                except ValueError:
+                    context.set_code(grpc.StatusCode.INVALID_ARGUMENT)
+                    context.set_details(
+                        "Invalid occurred_at_end format, expected ISO 8601"
+                    )
+                    return audit_log_pb2.QueryAuditLogsResponse()
 
             total_count = query.count()
 

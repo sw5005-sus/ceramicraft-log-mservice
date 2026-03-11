@@ -29,12 +29,14 @@ message AuditLog {
 
 message QueryAuditLogsRequest {
     optional int64 actor_id = 1;
-    optional string service = 2;    // Filter by calling service name
+    optional string service = 2;            // Filter by calling service name
     optional string role = 3;
-    optional string start_time = 4; // ISO 8601 string
-    optional string end_time = 5;   // ISO 8601 string
-    int32 limit = 6;                // Page size
-    int32 offset = 7;               // Offset for pagination
+    optional string start_time = 4;         // ISO 8601 string, filter by created_at (log write time, inclusive)
+    optional string end_time = 5;           // ISO 8601 string, filter by created_at (log write time, inclusive)
+    optional string occurred_at_start = 6;  // ISO 8601 string, filter by occurred_at (event time, inclusive)
+    optional string occurred_at_end = 7;    // ISO 8601 string, filter by occurred_at (event time, inclusive)
+    int32 limit = 8;                        // Page size
+    int32 offset = 9;                       // Offset for pagination
 }
 
 message QueryAuditLogsResponse {
