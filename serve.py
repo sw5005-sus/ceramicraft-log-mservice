@@ -52,10 +52,14 @@ def reset_db() -> None:
 @app.command()
 def start(
     LOG_MSERVICE_GRPC_HOST: str = typer.Option(
-        LOG_MSERVICE_GRPC_HOST, "--host", help="gRPC server host"
+        LOG_MSERVICE_GRPC_HOST,
+        "--host",
+        help="gRPC server host",
     ),
     LOG_MSERVICE_GRPC_PORT: str = typer.Option(
-        LOG_MSERVICE_GRPC_PORT, "--port", help="gRPC server port"
+        LOG_MSERVICE_GRPC_PORT,
+        "--port",
+        help="gRPC server port",
     ),
 ) -> None:
     """Start the gRPC server."""
