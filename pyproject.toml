@@ -17,3 +17,12 @@ dependencies = [
     "sqlalchemy>=2.0.48",
     "typer>=0.24.1",
 ]
+
+[dependency-groups]
+test = [
+    "pytest>=9.0.2",
+    "testcontainers[postgres]>=4.14.1",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
