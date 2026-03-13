@@ -1,4 +1,4 @@
-name: SonarCloud and Snyk
+name: Scan
 
 on:
   push:

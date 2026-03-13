@@ -1,4 +1,4 @@
-name: Build & Trivy Scan
+name: Trivy
 
 on:
   push:
