@@ -19,8 +19,12 @@ dependencies = [
 ]
 
 [dependency-groups]
-dev = ["ruff>=0.15.6", "ty>=0.0.22"]
-test = ["pytest>=9.0.2", "testcontainers[postgres]>=4.14.1"]
+dev = [
+    "pytest>=9.0.2",
+    "ruff>=0.15.6",
+    "testcontainers[postgres]>=4.14.1",
+    "ty>=0.0.22",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

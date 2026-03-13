@@ -51,7 +51,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: uv sync --dev --group test
+        run: uv sync --dev
 
       - name: Run type check
         run: uv run ty check
