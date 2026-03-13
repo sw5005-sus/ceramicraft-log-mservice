@@ -19,6 +19,10 @@ dependencies = [
 ]
 
 [dependency-groups]
+dev = [
+    "ruff>=0.15.6",
+    "ty>=0.0.22",
+]
 test = [
     "pytest>=9.0.2",
     "testcontainers[postgres]>=4.14.1",
