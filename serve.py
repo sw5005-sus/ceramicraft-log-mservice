@@ -46,30 +46,40 @@ def _setup_append_only_triggers(bind_engine) -> None:
     This function is idempotent and safe to call on every startup.
     """
     with bind_engine.connect() as conn:
-        conn.execute(text("""
+        conn.execute(
+            text("""
             CREATE OR REPLACE FUNCTION prevent_audit_log_mutation()
             RETURNS TRIGGER LANGUAGE plpgsql AS $$
             BEGIN
                 RAISE EXCEPTION 'audit_logs is append-only: % operations are not permitted', TG_OP;
             END;
             $$
-        """))
-        conn.execute(text("""
+        """)
+        )
+        conn.execute(
+            text("""
             DROP TRIGGER IF EXISTS trg_no_update_audit_logs ON audit_logs
-        """))
-        conn.execute(text("""
+        """)
+        )
+        conn.execute(
+            text("""
             CREATE TRIGGER trg_no_update_audit_logs
             BEFORE UPDATE ON audit_logs
             FOR EACH ROW EXECUTE FUNCTION prevent_audit_log_mutation()
-        """))
-        conn.execute(text("""
+        """)
+        )
+        conn.execute(
+            text("""
             DROP TRIGGER IF EXISTS trg_no_delete_audit_logs ON audit_logs
-        """))
-        conn.execute(text("""
+        """)
+        )
+        conn.execute(
+            text("""
             CREATE TRIGGER trg_no_delete_audit_logs
             BEFORE DELETE ON audit_logs
             FOR EACH ROW EXECUTE FUNCTION prevent_audit_log_mutation()
-        """))
+        """)
+        )
         conn.commit()
 
 
