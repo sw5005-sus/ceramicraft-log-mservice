@@ -224,8 +224,12 @@ class TestVerifyAuditLogChain:
     ) -> None:
         _record(svc, ctx)
 
+        # Bypass the append-only trigger using session_replication_role to simulate
+        # a privileged (DBA-level) direct database tampering scenario.
         with db_engine.connect() as conn:
+            conn.execute(text("SET session_replication_role = replica"))
             conn.execute(text("UPDATE audit_logs SET description = 'TAMPERED'"))
+            conn.execute(text("RESET session_replication_role"))
             conn.commit()
 
         resp = svc.VerifyAuditLogChain(
@@ -234,3 +238,37 @@ class TestVerifyAuditLogChain:
         )
         assert resp.is_valid is False
         assert resp.failed_log_id != ""
+
+    def test_update_is_rejected_by_db(
+        self,
+        svc: AuditLogService,
+        ctx: MagicMock,
+        db_engine: Engine,
+    ) -> None:
+        """The append-only trigger must raise an exception for UPDATE attempts."""
+        import pytest as _pytest
+        from sqlalchemy.exc import ProgrammingError
+
+        _record(svc, ctx)
+
+        with _pytest.raises(ProgrammingError, match="append-only"):
+            with db_engine.connect() as conn:
+                conn.execute(text("UPDATE audit_logs SET description = 'HACK'"))
+                conn.commit()
+
+    def test_delete_is_rejected_by_db(
+        self,
+        svc: AuditLogService,
+        ctx: MagicMock,
+        db_engine: Engine,
+    ) -> None:
+        """The append-only trigger must raise an exception for DELETE attempts."""
+        import pytest as _pytest
+        from sqlalchemy.exc import ProgrammingError
+
+        _record(svc, ctx)
+
+        with _pytest.raises(ProgrammingError, match="append-only"):
+            with db_engine.connect() as conn:
+                conn.execute(text("DELETE FROM audit_logs"))
+                conn.commit()

@@ -7,7 +7,7 @@ import dotenv
 import dttb
 import grpc
 import typer
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 from ceramicraft_log_mservice.models.audit_log import Base
@@ -39,6 +39,40 @@ engine = create_engine(DATABASE_URL)
 app = typer.Typer(help="Ceramicraft Audit Log Microservice CLI")
 
 
+def _setup_append_only_triggers(bind_engine) -> None:
+    """
+    Install database-level triggers that prevent UPDATE and DELETE on audit_logs.
+    The table is append-only: only INSERT and SELECT are permitted.
+    This function is idempotent and safe to call on every startup.
+    """
+    with bind_engine.connect() as conn:
+        conn.execute(text("""
+            CREATE OR REPLACE FUNCTION prevent_audit_log_mutation()
+            RETURNS TRIGGER LANGUAGE plpgsql AS $$
+            BEGIN
+                RAISE EXCEPTION 'audit_logs is append-only: % operations are not permitted', TG_OP;
+            END;
+            $$
+        """))
+        conn.execute(text("""
+            DROP TRIGGER IF EXISTS trg_no_update_audit_logs ON audit_logs
+        """))
+        conn.execute(text("""
+            CREATE TRIGGER trg_no_update_audit_logs
+            BEFORE UPDATE ON audit_logs
+            FOR EACH ROW EXECUTE FUNCTION prevent_audit_log_mutation()
+        """))
+        conn.execute(text("""
+            DROP TRIGGER IF EXISTS trg_no_delete_audit_logs ON audit_logs
+        """))
+        conn.execute(text("""
+            CREATE TRIGGER trg_no_delete_audit_logs
+            BEFORE DELETE ON audit_logs
+            FOR EACH ROW EXECUTE FUNCTION prevent_audit_log_mutation()
+        """))
+        conn.commit()
+
+
 @app.command()
 def reset_db() -> None:
     """Reset the database schema (drop all and recreate)."""
@@ -46,6 +80,7 @@ def reset_db() -> None:
     Base.metadata.drop_all(bind=engine)
     typer.echo("Creating tables...")
     Base.metadata.create_all(bind=engine)
+    _setup_append_only_triggers(engine)
     typer.secho("Database reset successfully.", fg=typer.colors.GREEN)
 
 
@@ -68,6 +103,9 @@ def start(
 
     # Initialize DB schema
     Base.metadata.create_all(bind=engine)
+
+    # Enforce append-only constraint via database triggers
+    _setup_append_only_triggers(engine)
 
     # Start gRPC server
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
