@@ -7,7 +7,7 @@ import dotenv
 import dttb
 import grpc
 import typer
-from sqlalchemy import create_engine, text
+from sqlalchemy import Engine, create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 from ceramicraft_log_mservice.models.audit_log import Base
@@ -39,7 +39,9 @@ engine = create_engine(DATABASE_URL)
 app = typer.Typer(help="Ceramicraft Audit Log Microservice CLI")
 
 
-def _setup_append_only_triggers(bind_engine) -> None:
+def _setup_append_only_triggers(
+    bind_engine: Engine,
+) -> None:
     """
     Install database-level triggers that prevent UPDATE and DELETE on audit_logs.
     The table is append-only: only INSERT and SELECT are permitted.
