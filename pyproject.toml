@@ -13,6 +13,7 @@ dependencies = [
     "grpcio>=1.78.0",
     "protobuf>=7.34.0",
     "psycopg[binary]>=3.3.3",
+    "pydantic-settings>=2.13.1",
     "python-dotenv>=1.2.2",
     "sqlalchemy>=2.0.48",
     "typer>=0.24.1",
