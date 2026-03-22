@@ -10,4 +10,6 @@ COPY serve.py ./
 
 RUN uv sync --frozen --no-dev
 
+EXPOSE 50051
+
 CMD ["uv", "run", "python", "serve.py", "start"]
