@@ -83,6 +83,14 @@ def start() -> None:
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
     settings = get_settings()
 
+    # Start health-check HTTP server first so Kubernetes probes pass
+    # even while the application is still initialising.
+    start_health_server(port=settings.LOG_MSERVICE_HTTP_PORT)
+    typer.secho(
+        f"Health HTTP server listening on 0.0.0.0:{settings.LOG_MSERVICE_HTTP_PORT}",
+        fg=typer.colors.CYAN,
+    )
+
     engine = create_engine(settings.DATABASE_URL)
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
@@ -104,13 +112,6 @@ def start() -> None:
 
     typer.secho(f"Starting gRPC server on {grpc_address}...", fg=typer.colors.CYAN)
     server.start()
-
-    # Start health-check HTTP server for Kubernetes probes
-    start_health_server(port=settings.LOG_MSERVICE_HTTP_PORT)
-    typer.secho(
-        f"Health HTTP server listening on 0.0.0.0:{settings.LOG_MSERVICE_HTTP_PORT}",
-        fg=typer.colors.CYAN,
-    )
 
     server.wait_for_termination()
 
