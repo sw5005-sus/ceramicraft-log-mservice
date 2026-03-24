@@ -15,6 +15,8 @@ class Settings(BaseSettings):
     POSTGRES_PORT: int = Field(default=5432)
     LOG_DB_NAME: str = "log_db"
 
+    LOG_MSERVICE_HTTP_PORT: int = 8080
+
     LOG_MSERVICE_GRPC_HOST: str = "[::]"
     LOG_MSERVICE_GRPC_PORT: int = 50051
 

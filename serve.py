@@ -9,6 +9,7 @@ from sqlalchemy import Engine, create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 from ceramicraft_log_mservice.config import get_settings
+from ceramicraft_log_mservice.health import start_health_server
 from ceramicraft_log_mservice.models.audit_log import Base
 from ceramicraft_log_mservice.pb import audit_log_pb2_grpc
 from ceramicraft_log_mservice.service import AuditLogService
@@ -103,6 +104,14 @@ def start() -> None:
 
     typer.secho(f"Starting gRPC server on {grpc_address}...", fg=typer.colors.CYAN)
     server.start()
+
+    # Start health-check HTTP server for Kubernetes probes
+    start_health_server(port=settings.LOG_MSERVICE_HTTP_PORT)
+    typer.secho(
+        f"Health HTTP server listening on 0.0.0.0:{settings.LOG_MSERVICE_HTTP_PORT}",
+        fg=typer.colors.CYAN,
+    )
+
     server.wait_for_termination()
 
 
