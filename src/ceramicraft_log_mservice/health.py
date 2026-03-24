@@ -9,7 +9,7 @@ _PING_RESPONSE = json.dumps({"status": "ok"}).encode()
 
 class _HealthHandler(BaseHTTPRequestHandler):
     def do_GET(self) -> None:  # noqa: N802
-        if self.path == "/ping":
+        if self.path == "/log-ms/v1/ping":
             self.send_response(200)
             self.send_header("Content-Type", "application/json")
             self.end_headers()

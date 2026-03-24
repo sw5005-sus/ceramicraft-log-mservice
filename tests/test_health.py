@@ -20,8 +20,8 @@ def health_server(health_port: int):
 
 
 def test_ping_returns_ok(health_port: int) -> None:
-    """GET /ping should return 200 with {"status": "ok"}."""
-    url = f"http://127.0.0.1:{health_port}/ping"
+    """GET /log-ms/v1/ping should return 200 with {"status": "ok"}."""
+    url = f"http://127.0.0.1:{health_port}/log-ms/v1/ping"
     with urllib.request.urlopen(url) as resp:
         assert resp.status == 200
         assert resp.read() == b'{"status": "ok"}'
