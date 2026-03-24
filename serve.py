@@ -85,9 +85,11 @@ def start() -> None:
 
     # Start health-check HTTP server first so Kubernetes probes pass
     # even while the application is still initialising.
-    start_health_server(port=settings.LOG_MSERVICE_HTTP_PORT)
+    start_health_server(
+        host=settings.LOG_MSERVICE_HTTP_HOST, port=settings.LOG_MSERVICE_HTTP_PORT
+    )
     typer.secho(
-        f"Health HTTP server listening on 0.0.0.0:{settings.LOG_MSERVICE_HTTP_PORT}",
+        f"Health HTTP server listening on {settings.LOG_MSERVICE_HTTP_HOST}:{settings.LOG_MSERVICE_HTTP_PORT}",
         fg=typer.colors.CYAN,
     )
 

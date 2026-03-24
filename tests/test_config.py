@@ -11,6 +11,7 @@ def test_settings_defaults():
     assert settings.POSTGRES_HOST == "localhost"
     assert settings.POSTGRES_PORT == 5432
     assert settings.LOG_DB_NAME == "log_db"
+    assert settings.LOG_MSERVICE_HTTP_HOST == "0.0.0.0"
     assert settings.LOG_MSERVICE_HTTP_PORT == 8080
     assert settings.LOG_MSERVICE_GRPC_HOST == "[::]"
     assert settings.LOG_MSERVICE_GRPC_PORT == 50051

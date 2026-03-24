@@ -22,13 +22,13 @@ class _HealthHandler(BaseHTTPRequestHandler):
         pass
 
 
-def start_health_server(port: int = 8080) -> HTTPServer:
+def start_health_server(host: str = "0.0.0.0", port: int = 8080) -> HTTPServer:
     """Start the health-check HTTP server on a daemon thread.
 
     Returns the ``HTTPServer`` instance so the caller can shut it down if
     needed.
     """
-    server = HTTPServer(("0.0.0.0", port), _HealthHandler)
+    server = HTTPServer((host, port), _HealthHandler)
     thread = threading.Thread(target=server.serve_forever, daemon=True)
     thread.start()
     return server
