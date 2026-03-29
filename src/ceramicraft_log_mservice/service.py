@@ -17,6 +17,9 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
         request: audit_log_pb2.RecordAuditLogRequest,
         context: grpc.ServicerContext,
     ) -> audit_log_pb2.RecordAuditLogResponse:
+        # Configure logging
+
+        print(f"Received RecordAuditLog request: {request}", flush=True)
         db: Session = self.session_factory()
         try:
             # Simple hash chain logic:
@@ -52,7 +55,7 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
 
             db.add(new_entry)
             db.commit()
-
+            print(f"Recorded new audit log entry: {new_entry}", flush=True)
             return audit_log_pb2.RecordAuditLogResponse(
                 success=True, event_id=str(new_entry.id)
             )
@@ -61,6 +64,7 @@ class AuditLogService(audit_log_pb2_grpc.AuditLogServiceServicer):
             db.rollback()
             context.set_code(grpc.StatusCode.INTERNAL)
             context.set_details(f"Internal server error: {e}")
+            print(f"Internal server error: {e}", flush=True)
             return audit_log_pb2.RecordAuditLogResponse(success=False)
         finally:
             db.close()
