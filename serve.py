@@ -80,7 +80,11 @@ def reset_db() -> None:
 @app.command()
 def start() -> None:
     """Start the gRPC server."""
-    logging.basicConfig(level=logging.INFO, stream=sys.stdout)
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+        stream=sys.stdout,
+    )
     settings = get_settings()
 
     # Start health-check HTTP server first so Kubernetes probes pass
