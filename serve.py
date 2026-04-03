@@ -1,5 +1,4 @@
 import logging
-import sys
 from concurrent import futures
 
 import dttb
@@ -83,7 +82,6 @@ def start() -> None:
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-        stream=sys.stdout,
     )
     settings = get_settings()
 
