@@ -37,3 +37,8 @@ exclude = ["src/ceramicraft_log_mservice/pb/"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.uv]
+override-dependencies = [
+    "pygments>=2.20.0",
+]
