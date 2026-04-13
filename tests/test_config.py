@@ -6,9 +6,9 @@ from ceramicraft_log_mservice.config import Settings, get_settings
 def test_settings_defaults():
     """Settings should load with expected defaults."""
     settings = Settings()
-    assert settings.POSTGRES_USER == "user"
-    assert settings.POSTGRES_PASSWORD == "password"
-    assert settings.POSTGRES_HOST == "localhost"
+    assert settings.POSTGRES_USER == ""
+    assert settings.POSTGRES_PASSWORD == ""
+    assert settings.POSTGRES_HOST == ""
     assert settings.POSTGRES_PORT == 5432
     assert settings.LOG_DB_NAME == "log_db"
     assert settings.LOG_MSERVICE_HTTP_HOST == "0.0.0.0"
